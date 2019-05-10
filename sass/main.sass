@@ -1,0 +1,272 @@
+@import "vars"
+@import "fonts"
+@import "libs"
+
+::placeholder
+	color: #666
+
+::selection
+	background-color: $accent
+	color: #fff
+
+body
+	font-size: 16px
+	min-width: 320px
+	position: relative
+	line-height: 1.65
+	font-family: $default-font
+	overflow-x: hidden
+	color: $text
+
+	input, textarea
+		border: #666 1px solid
+		outline: none
+		&:focus:required:invalid
+			border-color: red
+		&:required:valid
+			border-color: green
+
+.logo
+	img
+		width: 90px
+		height: auto
+
+.form-lable
+	font-size: .9vw
+	margin: 0
+
+.img-responsive
+	display: block
+	max-width: 100%
+	height: auto
+	&.img-width
+		width: 100%
+
+.text-center
+	text-align: center
+
+b, strong
+	font-weight: bold
+
+.example-flex
+	.row
+		color: #fff
+		height: 150px
+		background-color: gray
+		.col
+			min-height: 50px
+			background-color: black
+			border: solid #fff 2px  
+
+
+.page-flex
+	display: flex
+	flex-direction: column
+	height: 100vh
+
+.content-flex
+	display: flex
+	position: relative
+	height: 100%
+	top: 0
+	flex-flow: row wrap
+
+.flex-center
+	margin-top: auto
+	margin-bottom: auto
+	width: 100%
+	height: auto
+	.container-fluid
+		position: relative
+
+.isLogIn
+	min-height: 700px
+	height: 100%
+	position: relative
+	background-size: cover
+	background-position: center
+	.top-line
+		position: absolute
+		margin-top: 4%
+		margin-left: 4%
+
+#signupForm
+	display: none
+	position: absolute
+	top: 0
+	left: 0
+	right: 0
+	bottom: 0
+	width: 35vw
+	height: 32vw
+	margin: auto
+	padding: 2vw 1vw
+	background-color: rgba(255, 255, 255, .4)
+	z-index: 10
+	border-radius: 1vw
+	& ~ *
+		transition: filter .5s ease
+	&.active
+		display: flex
+		& ~ *
+			filter: blur(5px)
+	.input
+		background-color: rgba(255, 255, 255, .3)
+		height: 2vw
+	.form-big-row
+		.img
+			background-color: rgba(116, 118, 175, .4)
+			margin: auto
+			border-radius: 8px
+		.row
+			margin-bottom: 10px
+			align-items: center
+			font-size: .9vw
+			height: 2vw
+			.input.radio
+				margin-left: 2%
+				width: 1vw
+				height: 1vw
+				vertical-align: middle
+		.input-textarea
+			resize: none
+			height: 9vw
+	.form-big-row.last
+		margin-top: 2.5%
+		.button
+			font-size: .8vw
+			height: 2vw
+
+
+
+#downloadImg				//Почему при обновлении сбрасываются стили?
+	margin-top: 5%
+	width: 80%
+	font-size: .8vw
+	margin-left: 10%
+
+		
+.logIn-panel
+	margin: auto
+	width: 30vw
+	height: 30vw
+	min-width: 300px
+	min-height: 300px
+	max-width: 100%
+	max-height: 100%
+	border-radius: 50%
+	background-color: rgba(255, 255, 255, .2)
+	.input
+		font-size: 1.2vw
+		height: 12%
+		margin-bottom: 15%
+	.form-flex
+		height: 100%
+		width: 60%
+		margin: auto
+		padding-top: 10%
+		justify-content: center
+		align-items: center
+		.msg
+			position: absolute
+			width: 100%
+			top: 15%
+			text-align: center
+			font-size: 1.2vw
+			font-style: italic
+			color: orange
+
+		.button-signup
+			margin-bottom: 5%
+			font-size: .9vw
+			width: 60%
+			height: 9%
+
+
+.logIn-composition
+	margin: auto
+	position: relative
+	background-color: rgba(26, 26, 26, .8)
+	color: #C6C6C6
+	font-size: 2.1vw
+	padding: 20px
+	border-radius: .5vw
+	.h1
+		text-align: center
+		color: #7476AF
+		font-size: 3vw
+
+.form-flex
+	height: 100%
+	width: 100%
+	display: flex
+	flex-direction: column
+	justify-content: space-between
+	margin: auto
+
+.input
+	width: 100%
+	padding-left: .5em
+	background-color: rgba(255, 255, 255, .5)
+	border-radius: 8px
+	&:focus, &:hover
+		box-shadow:	none
+
+
+.form-signin
+	position: relative
+	top: 4%
+
+.button
+	display: inline-block
+	color: #C6C6C6
+	border: none
+	text-decoration: none
+	background-color: rgba(26, 26, 26, .8)
+	border-radius: .4vw
+	text-align: center
+	position: relative
+	outline: none
+	transition: background-color .1s ease
+	width: 100%
+	&:focus, &:hover
+		text-decoration: none
+		outline: none
+	&:hover
+		background-color: rgba(10, 10, 10, .8)
+	&:active
+		background-color: rgba(5, 5, 5, .9)
+
+#button-signin
+	font-size: 1.2vw
+	background-color: rgba(116, 118, 175, .8)
+	height: 12%
+	width: 70%
+	margin-bottom: 10%
+	&:hover
+		background-color: rgba(105, 103, 173, .8)
+	&:active
+		background-color: rgba(93, 96, 170, .9)
+
+#radio-dwarf
+	margin-right: 10%
+
+#button-signup
+	font-size: .7vw
+	height: 8%
+	width: 50%
+
+.footer
+	text-align: center
+	font-size: 18px
+	color: #C6C6C6
+	background-color: #1A1A1A
+	.row
+		min-height: 50px
+
+.phone
+	.fa-mobile
+		margin-right: 5px
+
+
+@import "media" // Always at the end
