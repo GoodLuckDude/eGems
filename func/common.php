@@ -1,7 +1,7 @@
 <?php
 //it's func for for general use
 function checkAuthorization() {
-  if ($_SESSION['authorized']<>true) {
+  if ( !isset($_SESSION['loggedUser']) ) {
     return false;
   }
   return true;

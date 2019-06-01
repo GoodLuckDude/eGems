@@ -3,6 +3,6 @@
     <a class="" href="#">Ваш профиль</a>
     <a class="" href="#">Драгоценности</a>
     <a class="" href="#">Пользователи</a>
-    <a id="exit" class="" href="#">Выход</a>
+    <a id="exit" class="" href="../authorization/logout.php">Выход</a>
   </div>
 </nav>

@@ -14,7 +14,6 @@
 						<div class="row">
 							<div class="col-5">Введите Email:</div>
 							<div class="col-7">
-								<label for="inputEmail" class="sr-only">Email address</label>
 								<input type="email" name="email" class="input" placeholder="Email address" required autofocus>
 							</div>
 						</div>
@@ -22,7 +21,6 @@
 						<div class="row">
 							<div class="col-5">Введите пароль:</div>
 							<div class="col-7">
-								<label for="inputPassword" class="sr-only">Password</label>
 								<input type="password" class="input" placeholder="Password" required>
 							</div>
 						</div>
@@ -30,7 +28,6 @@
 						<div class="row">
 							<div class="col-5">Повторите пароль:</div>
 							<div class="col-7">
-								<label for="inputPassword" class="sr-only">Password</label>
 								<input type="password" name="password" class="input" placeholder="Password" required>
 							</div>
 						</div>
@@ -38,9 +35,8 @@
 
 					<div class="col-3">
 						<div class="img">
-							<img class="img" src="img/dwarf.png" width="100%" height="100%" alt="Гном">
+							<img class="img" src="img/dwarfSmall.png" width="100%" height="100%" alt="Гном">
 						</div>
-						<label for="downloadImg" class="sr-only">downloadImg</label>
 						<button id="downloadImg" class="button" type="button">Загрузить</button>
 					</div>
 
@@ -54,7 +50,6 @@
 						<div class="row">
 							<div class="col-5">Ваше имя:</div>
 							<div class="col-7">
-								<label for="inputEmail" class="sr-only">Ваше имя</label>
 								<input type="text" name="name" class="input" placeholder="Name" required autofocus>
 							</div>
 						</div>
@@ -133,14 +128,13 @@
 
 										<div class="msg">
 										<?php
-										echo $_SERVER['PHP_SELF'];
-										echo $_SESSION['msg'];
-										unset($_SESSION['msg']);
+										echo $_SESSION['errMsg'];
+										unset($_SESSION['errMsg']);
 										?>
 										</div>
 
 										<label for="inputEmail" class="sr-only">Email address</label>
-										<input type="email" id="inputEmail" name="email" class="form-control input" placeholder="Email address" required autofocus>
+										<input type="email" id="inputEmail" name="email" class="form-control input" placeholder="Email address" required value=<?php echo $_SESSION['loginEntered']?>>
 										<label for="inputPassword" class="sr-only">Password</label>
 										<input type="password" id="inputPassword" name="password" class="form-control input" placeholder="Password" required>
 										<button id="button-signin" class="button" type="submit">Войти</button>
@@ -154,22 +148,7 @@
 					</div>
 				</div>
 			</div>
-
-			<div class="footer">
-				<div class="container-fluid">
-					<div class="row justify-content-around align-items-center">
-						<div class="col-lg-3 col-sm-5 phone">
-							<i class="fa fa-mobile"></i>+7 (919) 781-95-69
-						</div>
-						<div class="col-lg-3 col-sm-5">
-							Бла-бла-бла
-						</div>
-						<div class="col-lg-3 col-sm-5">
-							Ля-ля-ля
-						</div>
-					</div>
-				</div>
-			</div>
+			<?php include_once "./_parts/footer.php" ?>
 		</div>
 	</div>
 

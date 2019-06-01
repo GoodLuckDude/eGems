@@ -1,7 +1,7 @@
 $(function() {
 
 	// Custom JS
-	//Вынести в отдельный модуль для странички авторизации
+	// Вынести в отдельный модуль для странички авторизации
 	let elButtonSignUp = document.getElementById("button-signup");
 	let signupForm = document.getElementById("signupForm");
 

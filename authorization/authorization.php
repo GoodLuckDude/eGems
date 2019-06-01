@@ -16,36 +16,43 @@ function registration($email, $password, $name, $race) {						//FIXME добав
 
 //redirect to elf's profile if elf, page of gems if dwarf....
 function goToNeededPage($user) {
+	$headerHost = 'Location: /';
 	//if user tried open whatever page before autoriz then redirect to this page
 	if(isset($_SESSION['neededPage'])) {
 		$path = $_SESSION['neededPage'];
 		unset($_SESSION['neededPage']);
-		header('Location: http://localhost' . $path);
+		header($headerHost . $path);
 		die();
 	}
-
+	$refProfile = 'profile/profile.php';
 	if($user['race'] == 'elf') {
-		header('Location: http://localhost/elf/profile.php');
+		header($headerHost . $refProfile.'?id='. $_SESSION['loggedUser']['id']);
 		die();
 
 		//race == dwarf
 	} else if($user['master'] == false) {
-		header('Location: http://localhost/dwarf/profile.php');		//FIXME не профиль, а страницу добавления драгоценностей
+		header($headerHost . $refProfile.'?id='. $_SESSION['loggedUser']['id']);		//FIXME не профиль, а страницу добавления драгоценностей
 		die();
 
 		//dwarf is master
 	} else {
-		header('Location: http://localhost/dwarf/profile.php');		//FIXME не профиль, а страницу драгоценностей или что там было
+		header($headerHost . $refProfile.'?id='. $_SESSION['loggedUser']['id']);		//FIXME не профиль, а страницу драгоценностей или что там было
 		die();
 	};
 };
 
-function redirect($user) {
+function redirect($user) {			//FIXME зарефакторить, разделить всю авторизацию на отдельные части и нормально назвать
+	$_SESSION['loginEntered'] = $_POST['email'];
 	if($user == false) {
-		$_SESSION['msg'] = 'Неверный логин или пароль';
+		$_SESSION['errMsg'] = 'Неверный логин или пароль';
 		goToLoginPage();
 	}
-	$_SESSION['authorized'] = true;
+	//успешно вошли
+	$_SESSION['loggedUser'] = $user;
+	$curDate = date("d.m.Y");
+	DB::run("UPDATE users SET authorization_date = ? WHERE id = ?",
+		[$curDate, $_SESSION['loggedUser']['id']]
+	);
 	goToNeededPage($user);
 
 //ToDo настроить сессию, куки
@@ -69,7 +76,7 @@ $password = clean($_POST['password']);
 
 if(isset($_POST['name'])) {								//если передали name, то сначала регистрация пользователя
 	$name = clean($_POST['name']);					//FIXME сделать проверку совпадения паролей, вывод ошибок
-	$race = clean($_POST['race']);
+	$race = $_POST['race'];
 	//$aboutMe = clean($_POST['aboutMe']);
 	registration($email, $password, $name, $race);	//NOTE как и когда лучше назначать мастера?
 }
