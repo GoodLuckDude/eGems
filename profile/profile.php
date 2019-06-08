@@ -1,59 +1,22 @@
 <?php
 require_once '../config/database.php';
 require_once '../func/common.php';
+require_once './php/logic.php';
+
 
 session_start();
-redirIfGuest();
+
+// redirIfGuest();   //в отдельную функцию
+
 
 include_once "../_parts/header.php";
-//как не смешивать вёрстку и php если мне нужны данные из бд?
-//редиректы + сессия или что-то подобное???
-$dataOfUser = DB::run("SELECT
-    id, email, name, race, master, registration_date,
-    authorization_date, status, deletion_date
-  FROM users
-  WHERE id = ?",
-  [$_GET['id']]
-)->fetch(PDO::FETCH_ASSOC);
-
-var_export($dataOfUser);
-
-if ($dataOfUser['race'] == 'dwarf') {
-  $profileImgRef = '../img/dwarf.png';
-} else {
-  $profileImgRef = '../img/elf.png';
-}
-
-if ($dataOfUser['deletion_date'] == NULL) {
-  $dataOfUser['deletion_date'] = '-';
-}
-
-function checkChengeAccess() {
-  if (($_SESSION['loggedUser']['id'] == $dataOfUser['id'] || $_SESSION['loggedUser']['master'] == true)) {
-    return true;
-  }
-  return false;
-}
-
-$masterChecked = '';
-
-if ($dataOfUser['master'] == true) $masterChecked = 'checked';
-
-function checkboxDisabler() {
-  if ( !checkChengeAccess() ) {
-    echo 'disabled';
-  }
-}
-
-DB::run
-
 ?>
 
 <body>
 
 <?php include_once "../_parts/navbar.php" ?>
 
-<div id="profile">
+<div id="page">
 
   <div id="preview" class="container">
     <div id="" class="row justify-content-center">
@@ -114,112 +77,27 @@ DB::run
             <a class="dropdown-item" href="#!">Не знаю, что</a>
           </div>
       </div>
-      <div class="col col-3 offset-2"></div>
+      <div class="col col-3 ml-auto"></div>
     </div>
 
     <div class="owl-carousel carousel-gems">
 
-      <div class="carousel-gems-item">
-        <div class="container">
-          <div class="row">
-            <div class="col col-6 offset-1 name"><span>Свинон</span></div>
-            <div class="col col-2 offset-1 value"><span>999</span> </div>
-          </div>
-          <div class="row">
-            <div class="col col-6 offset-1 name"><span>Кварц</span></div>
-            <div class="col col-2 offset-1 value"><span>36</span></div>
-          </div>
-          <div class="row">
-            <div class="col col-6 offset-1 name"><span>Пирротиниум</span></div>
-            <div class="col col-2 offset-1 value"><span>0</span></div>
-          </div>
-        </div>
-      </div>
-
-
-      <div class="carousel-gems-item">
-        <div class="container">
-          <div class="row">
-            <div class="col col-6 offset-1 name"><span>Свинон</span></div>
-            <div class="col col-2 offset-1 value"><span>999</span> </div>
-          </div>
-          <div class="row">
-            <div class="col col-6 offset-1 name"><span>Кварц</span></div>
-            <div class="col col-2 offset-1 value"><span>36</span></div>
-          </div>
-          <div class="row">
-            <div class="col col-6 offset-1 name"><span>Пирротиниум</span></div>
-            <div class="col col-2 offset-1 value"><span>0</span></div>
-          </div>
-        </div>
-      </div>
-
-
-      <div class="carousel-gems-item">
-        <div class="container">
-          <div class="row">
-            <div class="col col-6 offset-1 name"><span>Свинон</span></div>
-            <div class="col col-2 offset-1 value"><span>999</span> </div>
-          </div>
-          <div class="row">
-            <div class="col col-6 offset-1 name"><span>Кварц</span></div>
-            <div class="col col-2 offset-1 value"><span>36</span></div>
-          </div>
-          <div class="row">
-            <div class="col col-6 offset-1 name"><span>Пирротиниум</span></div>
-            <div class="col col-2 offset-1 value"><span>0</span></div>
-          </div>
-        </div>
-      </div>
-
-
-      <div class="carousel-gems-item">
-        <div class="container">
-          <div class="row">
-            <div class="col col-6 offset-1 name"><span>Свинон</span></div>
-            <div class="col col-2 offset-1 value"><span>999</span> </div>
-          </div>
-          <div class="row">
-            <div class="col col-6 offset-1 name"><span>Кварц</span></div>
-            <div class="col col-2 offset-1 value"><span>36</span></div>
-          </div>
-          <div class="row">
-            <div class="col col-6 offset-1 name"><span>Пирротиниум</span></div>
-            <div class="col col-2 offset-1 value"><span>0</span></div>
-          </div>
-        </div>
-      </div>
-
-
-      <div class="carousel-gems-item">
-        <div class="container">
-          <div class="row">
-            <div class="col col-6 offset-1 name"><span>Свинон</span></div>
-            <div class="col col-2 offset-1 value"><span>999</span> </div>
-          </div>
-          <div class="row">
-            <div class="col col-6 offset-1 name"><span>Кварц</span></div>
-            <div class="col col-2 offset-1 value"><span>36</span></div>
-          </div>
-        </div>
-      </div>
-
-
+    <?php showGems($gems); ?>
 
     </div>
   </div>
 
 
 
-  <div id="other-data" class="container">
+  <div id="other-data" class="container list">
     <div class="row justify-content-center">
-      <div id="about-me-title" class="col col-11">О себе</div>
+      <div class="col col-11 heading">О себе</div>
     </div>
 
     <div class="row">
       <div class="row small-row">
         <div class="col col-12 value text-about-me"><label for="change-about-me-button" class="lable">Я Рикардо Ромити пищу....свищу<br><br><br></label></div>
-        <div class="col col-2 offset-10"><button id="change-about-me-button" class="button button-purple" type="button">Изменить</button></div>
+        <div class="col col-2 ml-auto"><button id="change-about-me-button" class="button button-purple" type="button">Изменить</button></div>
       </div>    
     </div>
 
@@ -228,12 +106,12 @@ DB::run
     <div class="row small-row">
       <div class="col col-3">Email: </div>
       <div class="col col-7 value"><label for="change-email-button" class="lable"><?php echo $dataOfUser['email']?></label></div>
-      <div class="col col-2"><button id="change-email-button" class="button button-purple" type="button">Изменить</button></div>
+      <div class="col col-2 ml-auto"><button id="change-email-button" class="button button-purple" type="button">Изменить</button></div>
     
     </div>
 
 
-    <?php if ( checkChengeAccess() ): ?>
+    <?php if ( checkDataChangeAccess($dataOfUser['id']) ): ?>
     <form id="change-email" class="hide" action="../config/changeUserData.php?id=<?php echo $_GET['id']?>" method="POST">
       <div class="row small-row hide">
         <div class="col col-3 change">Новый Email: </div>
@@ -253,11 +131,11 @@ DB::run
       <div class="row small-row">
         <div class="col col-3">Пароль:</div>
         <div class="col col-7 value"><label for="change-password-button" class="lable">********</label></div>
-        <div class="col col-2"><button id="change-password-button" class="button button-purple" type="button">Изменить</button></div>
+        <div class="col col-2 ml-auto"><button id="change-password-button" class="button button-purple" type="button">Изменить</button></div>
       </div>
     
 
-      <?php if ( checkChengeAccess() ): ?>
+      <?php if ( checkDataChangeAccess($dataOfUser['id']) ): ?>
       <form id="change-password" class="hide" action="../config/changeUserData.php?id=<?php echo $_GET['id']?>" method="POST">
         <div class="row small-row hide">
           <div class="col col-3 change">Старый пароль: </div>
