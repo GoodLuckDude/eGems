@@ -47,7 +47,7 @@ try{
   }
 
 
-  $sql .= "WHERE race = 'dwarf' AND gems.deleted = FALSE] GROUP BY users.id, name, master";
+  $sql .= " WHERE race = 'dwarf' AND gems.deleted = FALSE GROUP BY users.id, name, master ";
 
 
   $dwarfs = DB::run($sql, $vars)->fetchAll();
