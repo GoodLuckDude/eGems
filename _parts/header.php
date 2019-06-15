@@ -21,7 +21,7 @@
 	<!-- Custom Browsers Color Start -->
 	<meta name="theme-color" content="#000">
 	<!-- Custom Browsers Color End -->
-
+	<link rel="stylesheet" href="/css/jquery-ui.min.css">
 	<link rel="stylesheet" href="/css/main.min.css">
 
 </head>

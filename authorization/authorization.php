@@ -1,17 +1,23 @@
 <?php
 //check email and pass in db and return user's name, race, master 
 function getUser($email, $password) {
-	$user = DB::run("SELECT id, name, race, master FROM users WHERE email = ? and password = ?",
-		[$email, $password]
+	$user = DB::run("SELECT id, name, race, master, password FROM users WHERE email = ?",
+		[$email]
 	)->fetch(PDO::FETCH_ASSOC);
-
+	if ( !password_verify($password, $user['password']) ) {
+		unset($user);
+		return false;
+	}
+	unset($user['password']);
 	return $user;
 }
 
 //registration of user
-function registration($email, $password, $name, $race) {						//FIXME добавить в бд столбец aboutMe и подправить эту функцию, пароль захешировать и изменить getUsert!!!!
+function registration($email, $password, $name, $race) {						//FIXME добавить в бд столбец aboutMe и подправить эту функцию, пароль захешировать и изменить getUsers!!!!
+	$hash = password_hash($password, PASSWORD_DEFAULT);
 	DB::run("INSERT INTO users (email, password, name, race) VALUES (?, ?, ?, ?)",
-		[$email, $password, $name, $race]);
+		[$email, $hash, $name, $race]
+	);
 }
 
 //redirect to elf's profile if elf, page of gems if dwarf....

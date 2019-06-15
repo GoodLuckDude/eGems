@@ -57,18 +57,18 @@ include_once "../_parts/header.php";
 
     <div class="row navbar justify-content-between">
       <div class="col col-3">
-        <button type="button" id="dropdownMenu1" class="button dropdown" data-toggle="dropdown"
+        <button type="button" id="dropdownMenu1" class="button dropdown drop-purple" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
           <span>Количество<i class="fa fa-angle-down"></i>
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
-            <a class="dropdown-item" href="#!">По возрастанию</a>
-            <a class="dropdown-item" href="#!">По убыванию</a>
-          </div>
+          <a class="dropdown-item" href="#!">По возрастанию</a>
+          <a class="dropdown-item" href="#!">По убыванию</a>
+        </div>
       </div>
 
       <div class="col col-3 type">
-        <button type="button" id="dropdownMenu2" class="button dropdown" data-toggle="dropdown"
+        <button type="button" id="dropdownMenu2" class="button dropdown drop-purple" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
             <span>Тип<i class="fa fa-angle-down"></i>
           </button>
@@ -105,7 +105,7 @@ include_once "../_parts/header.php";
     <div class="row">
     <div class="row small-row">
       <div class="col col-3">Email: </div>
-      <div class="col col-7 value"><label for="change-email-button" class="lable"><?php echo $dataOfUser['email']?></label></div>
+      <div class="col col-3 value"><label for="change-email-button" class="lable"><?php echo $dataOfUser['email']?></label></div>
       <div class="col col-2 ml-auto"><button id="change-email-button" class="button button-purple" type="button">Изменить</button></div>
     
     </div>
@@ -115,7 +115,7 @@ include_once "../_parts/header.php";
     <form id="change-email" class="hide" action="../config/changeUserData.php?id=<?php echo $_GET['id']?>" method="POST">
       <div class="row small-row hide">
         <div class="col col-3 change">Новый Email: </div>
-        <div class="col col-7 change">
+        <div class="col col-3 change">
           <input class="input" type="email" name="email" placeholder="Email address" required>
           <button class="button button-submit" type="submit">Подтвердить</button>
         </div>      
@@ -130,7 +130,7 @@ include_once "../_parts/header.php";
     <div class="row">
       <div class="row small-row">
         <div class="col col-3">Пароль:</div>
-        <div class="col col-7 value"><label for="change-password-button" class="lable">********</label></div>
+        <div class="col col-3 value"><label for="change-password-button" class="lable">********</label></div>
         <div class="col col-2 ml-auto"><button id="change-password-button" class="button button-purple" type="button">Изменить</button></div>
       </div>
     
@@ -139,19 +139,19 @@ include_once "../_parts/header.php";
       <form id="change-password" class="hide" action="../config/changeUserData.php?id=<?php echo $_GET['id']?>" method="POST">
         <div class="row small-row hide">
           <div class="col col-3 change">Старый пароль: </div>
-          <div class="col col-7 change">
+          <div class="col col-3 change">
             <input class="input" type="password" name="oldPassword" placeholder="Old password" required>
           </div>
         </div>
         <div class="row small-row hide">
           <div class="col col-3 change">Новый пароль: </div>
-          <div class="col col-7 change">
+          <div class="col col-3 change">
             <input class="input" type="password" name="password" placeholder="New password" required>
           </div>
         </div>
         <div class="row small-row hide">
           <div class="col col-3 change">Повторите пароль: </div>
-          <div class="col col-7 change">
+          <div class="col col-3 change">
             <input class="input" type="password" name="confirmedPassword" placeholder="Confirm password" required>
             <button class="button button-submit" type="submit">Подтвердить</button>
           </div>
@@ -197,9 +197,7 @@ include_once "../_parts/header.php";
 
 <?php include_once "../_parts/footer.php" ?>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
 <script src="./js/owl.carousel.min.js"></script>
 <script src="./js/common.js"></script>
 </body>

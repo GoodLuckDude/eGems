@@ -1,4 +1,6 @@
 <?php
+//require_once "../config/database.php";
+
 //it's func for for general use
 function checkAuthorization() {
   if ( !isset($_SESSION['loggedUser']) ) {
@@ -48,8 +50,9 @@ function checkDataChangeAccess($id) {
 
 function getDataOfUser($id) {
   $dataOfUser = DB::run("SELECT
-        id, email, name, race, master, registration_date,
-        authorization_date, status, deletion_date
+        id, email, name, race, master, to_char(registration_date, 'DD.MM.YYYY') as registration_date,
+        to_char(authorization_date, 'DD.MM.YYYY') as authorization_date, status,
+        (deletion_date, 'DD.MM.YYYY') as deletion_date
       FROM users
       WHERE id = ?",
     [$id]
@@ -59,24 +62,25 @@ function getDataOfUser($id) {
 
 function getDwarfGems($dwarfId) {
   $gems = DB::run(" SELECT type, count(gem_type_id)
-      FROM gem_types INNER JOIN gems
-      ON gem_types.id = gems.gem_type_id
-      WHERE gems.dwarf_id = ?
-      GROUP BY gem_types.type
+      FROM gems_types INNER JOIN gems
+      ON gems_types.id = gems.gem_type_id
+      WHERE gems.dwarf_id = ? AND gems_types.deleted = false
+      GROUP BY gems_types.type
       ORDER BY count DESC",
     [$dwarfId]
   )->fetchAll();
   return $gems;
 }
 
-function getUnassignedGems() {
-  $unassignedGems = DB::run("SELECT type, gems.id, extraction_date, email
-      FROM gem_types
-      INNER JOIN gems ON gem_types.id = gems.gem_type_id
+function getStash() {
+  $stash = DB::run("SELECT type, gems.id, gems.gem_type_id,
+        to_char(extraction_date, 'DD.MM.YYYY') as extraction_date, email
+      FROM gems_types
+      INNER JOIN gems ON gems_types.id = gems.gem_type_id
       INNER JOIN users ON users.id = gems.dwarf_id
       WHERE gems.status = 'не назначена'"
   )->fetchAll();
-  return $unassignedGems;
+  return $stash;
 }
 
 
@@ -94,9 +98,9 @@ function makeElvesCoeffs() {
 };
 
 
-function getAssignCoeffs() {
-  $assignCoeffs = DB::run("SELECT * FROM assign")->fetch(PDO::FETCH_ASSOC);
-  return $assignCoeffs;
+function getAssignmentCoeffs() {
+  $assignmentCoeffs = DB::run("SELECT * FROM assign")->fetch(PDO::FETCH_ASSOC);
+  return $assignmentCoeffs;
 }
 
 function getCondition() {
@@ -117,32 +121,47 @@ function getCondition() {
   return $condition;
 }
 
+function getWishes($gemTypeId) {
+  $wishesWthFields = DB::run("SELECT elf_id, wish FROM wishes
+    WHERE gem_type_id = ?",
+    [$gemTypeId]
+  );
 
-function assign($gems, $condition) {
+  $wishes = array();
 
+  while ($wish = $wishesWthFields->fetch()) {
+    $wishes[$wish['elf_id']] = $wish['wish'];
+  }
+
+  return $wishes;
 }
 
-function assignEqually($assignCoeff, $elvesCoeffs, $condition) {  //$assignment - array:: elfId => current gem coeff
+function assignEqually($assignmentCoeff, $elvesCoeffs, $condition, $assignment) {  //$assignment - array:: elf's id => current gem coeff
+  foreach ($assignment as $elfId => $gems) {
+    $condition[$elfId] += count($gems);
+  }
+
   $uniq = count(array_unique($condition));
-  $step = 1/$uniq;
-//мне гг
+  $uniq > 1 ? $step = 1/($uniq-1) : $step = 0;
+  $minCount = +INF;
+  $currentStep = -1;
+
+
   arsort($condition);
 
-  $minCount = +INF;
-  $currentStep = 0;
   foreach ($condition as $elfId => $count) {
     if($count < $minCount) {
       $minCount = $count;
       $currentStep += 1;
     };
 
-    $elvesCoeffs[$elfId] += $step*$currentStep * $assignCoeff;
+    $elvesCoeffs[$elfId] += $step * $currentStep * $assignmentCoeff;
   };
 
   return $elvesCoeffs;
 };
 
-function assignAtLeastOne($assignCoeff, $elvesCoeffs, $condition, $initialState) {  //выкинуть обращение к бд, передавать всё чеерез параметры. И в остальных распределениях тоже.
+function assignAtLeastOne($assignmentCoeff, $elvesCoeffs, $condition, $assignment) {  //выкинуть обращение к бд, передавать всё чеерез параметры. И в остальных распределениях тоже.
   $luckyElvesWithField = DB::run("SELECT DISTINCT elf_id FROM gems
     WHERE status = 'назначена'"
   );
@@ -154,31 +173,54 @@ function assignAtLeastOne($assignCoeff, $elvesCoeffs, $condition, $initialState)
   }
 
   foreach($condition as $elfId => $count) {
-    if ( $initialState[$elfId] == $count && !in_array($elfId, $luckyElves) ) {
-      $elvesCoeffs[$elfId] += $assignCoeff;
+    if ( !array_key_exists($elfId, $assignment) && !in_array($elfId, $luckyElves) ) {
+      $elvesCoeffs[$elfId] += $assignmentCoeff;
     }
   }
 //сделать нормальный $condition, чтобы подходил под все функции сразу.
   return $elvesCoeffs;
 };
 
-function assignPreferred($assignCoeff, $elvesCoeffs, $condition, $gemId) {
-  //вынести обращение к БД и всё такое, как обычно....
-  $wishesWthFields = DB::run("SELECT elf_id, wish FROM wishes
-    WHERE gem_type_id = ?",
-    [$gemId]
-  );
+function assignPreferred($assignmentCoeff, $elvesCoeffs, $wishes, $gemId) {
+  $uniq = count(array_unique($wishes));
+  $step = 1/($uniq - 1);
+  $currentStep = -1;
+  $minWish = -INF;
 
-  $wishes = array();
+  asort($wishes);
 
-  while ($wish = $wishesWthFields->fetch()) {
-    $wishes[$wish['elf_id']] = $wish['wish'];
-  }
+  foreach ($wishes as $elfId => $wish) {
+    if($wish > $minWish) {
+      $minWish = $wish;
+      $currentStep += 1;
+    };
 
-  foreach ($wishes as $id => $wish) {
-    $elvesCoeffs[$id] += $wish * $assignCoeff;
+    $elvesCoeffs[$elfId] += $step * $currentStep * $assignmentCoeff;
   }
   return $elvesCoeffs;
+}
+
+function makeAssignment($stash, $assignmentCoeffs) {
+  $assignment = array();
+  $condition = getCondition();
+
+  foreach($stash as $gem) {
+    $wishes = getWishes($gem['gem_type_id']);
+    $elvesCoeffs = makeElvesCoeffs();
+
+    $elvesCoeffs = assignEqually($assignmentCoeffs['equally'], $elvesCoeffs, $condition, $assignment);
+    $elvesCoeffs = assignAtLeastOne($assignmentCoeffs['least_one'], $elvesCoeffs, $condition, $assignment);
+    $elvesCoeffs = assignPreferred($assignmentCoeffs['preferred'], $elvesCoeffs, $wishes, $gem['type']);
+
+    $selectedElf = array_search(max($elvesCoeffs), $elvesCoeffs);
+
+    if ( !array_key_exists($selectedElf, $assignment) ) {
+      $assignment[$selectedElf] = array();
+    }
+    array_push($assignment[$selectedElf], $gem['id']);
+  };
+
+  return $assignment;
 }
 
 ?>

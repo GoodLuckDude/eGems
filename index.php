@@ -95,7 +95,7 @@
 		<div class="top-line">
 			<a href="#" class="logo"><img src="img/logo-1.svg" alt="Драгоценности от гномов"></a>
 		</div>
-		<div class="page-flex">
+		<div id="log" class="page-flex 100">
 
 			<div class="content-flex">
 				<div class="flex-center">

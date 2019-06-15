@@ -1,10 +1,10 @@
 <?php
-// require_once '../../config/database.php';
-// require_once '../../func/common.php';
+//require_once '../../config/database.php';
+//require_once '../../func/common.php';
 
 session_start();
 //goToLoginPage();
-
+$_GET['id'] = 1;
 $dataOfUser = getDataOfUser($_GET['id']);
 
 
@@ -14,7 +14,7 @@ if ($dataOfUser['race'] == 'dwarf') {
   $profileImgRef = '../img/elf.png';
 }
 
-if ($dataOfUser['deletion_date'] == NULL) {
+if ($dataOfUser['deletion_date'] == "(,DD.MM.YYYY)") {
   $dataOfUser['deletion_date'] = '-';
 }
 

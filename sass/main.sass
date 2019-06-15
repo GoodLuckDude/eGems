@@ -29,6 +29,8 @@ body
 		border: #666 1px solid
 		border-radius: 8px
 		outline: none
+		width: 100%
+		padding-left: .5em
 		&:focus:required:invalid
 			border-color: red
 		&:required:valid
@@ -66,11 +68,17 @@ b, strong
 			background-color: black
 			border: solid #fff 2px  
 
+#log
+	height: 100vh
+
+div.content
+	flex: 1 0 auto
+	padding-bottom: 80px
 
 .page-flex
 	display: flex
 	flex-direction: column
-	height: 100vh
+	min-height: 100vh
 
 .content-flex
 	display: flex
@@ -86,6 +94,17 @@ b, strong
 	height: auto
 	.container-fluid
 		position: relative
+
+.msg
+	color: green
+	text-align: center
+	font-style: italic
+
+.err-msg
+	color: #DE531F
+
+.neutral-msg
+	color: #1a1a1a
 
 .isLogIn
 	height: 100%
@@ -145,7 +164,11 @@ b, strong
 			font-size: .8vw
 			height: 2vw
 
-
+.checkbox
+	margin-left: 5px
+	width: 15px
+	height: 15px
+	vertical-align: middle
 
 #downloadImg
 	margin-top: 5%
@@ -248,7 +271,8 @@ b, strong
 
 .button-purple
 	color: #fff
-	background-color: #A4A6D1
+	border-radius: 20px
+	background-color: #9c9ece
 	&:hover
 		background-color: #7476AF
 	&:active
@@ -276,6 +300,7 @@ b, strong
 	width: 50%
 
 .footer
+	margin-top: auto
 	text-align: center
 	font-size: 18px
 	color: #C6C6C6
@@ -353,41 +378,73 @@ b, strong
 			width: 15px
 			height: 15px
 			vertical-align: middle
+
+.row.navbar
+	padding: 25px 50px
+	font-size: 16px
+	.col
+		min-height: 35px
+		padding: 0 20px
+		& > span
+			margin-left: .5em
+		label
+			margin-bottom: 0
+	#active
+		margin-right: 20px
+	.dropdown-menu
+		width: 80%
+		margin-left: 10%
 		
+.dropdown-menu
+	background-color: #A4A6D1
+	font-size: 14px
+	padding: 5px 10px
+	.dropdown-item
+		padding: 5px 10px
+	.dropdown-item:active
+		background-color: gray
+	input
+		border-radius: 5px
+		border: none
+		width: 94%
+		margin: 0 3% 5px 3%
+	.radio
+		width: auto
+	label
+		margin-bottom: 0
+
+.hyphens
+	word-break: break-all
+
+.button.drop-purple
+	position: relative
+	text-align: left
+	font-size: 16px
+	color: #fff
+	padding: 0px 28px 0px 10px
+	min-height: 35px
+	border-radius: 0
+	background-color: transparent
+	border-bottom: 1px solid #A4A6D1
+	border-top: 1px solid #A4A6D1
+	.fa
+		position: absolute
+		right: 10px
+		font-size: 24px
+		bottom: 5px
+
+
+.dropdown
+	cursor: pointer
+	.fa
+		margin-left: .5em
+		vertical-align: middle
 
 #mined-gems
 	padding: 10px
 	text-align: center
 	background-color: #8789BD
 	font-size: 14px
-	.navbar
-		padding: 25px 50px
-		.col
-			height: 35px
-			padding: 0 30px
-		.dropdown-menu
-			width: 80%
-			margin-left: 10%
-			background-color: #A4A6D1
-			.dropdown-item:active
-				background-color: gray
-
-		.button
-			text-align: left
-			font-size: 16px
-			color: #fff
-			padding: 0 10px
-			height: 35px
-			border-radius: 0
-			background-color: transparent
-			border-bottom: 1px solid #A4A6D1
-			border-top: 1px solid #A4A6D1
-			.fa
-				position: absolute
-				right: 10px
-				font-size: 24px
-				vertical-align: middle
-		.type
 	.label
 		font-size: 24px
 	.carousel-gems
@@ -415,31 +472,30 @@ b, strong
 				background-color: #696CB4
 
 .list
+	height: 100%
 	padding: 15px 70px
 	color: #1A1A1A
 	background-color: #B8B8CD
-	.ml-auto
-		padding-right: 0
 	.row
 		padding: 20px 30px
-
 		border-bottom: 1px solid #A4A6D1
-	.row:last-child
-		padding-bottom: 0
+	&>.row:last-child
 		border-bottom: 0
 	.lable
 		cursor: pointer
 		width: 100%
 		margin: 0
 		color: #000
-	.button
-		border-radius: 15px
-		padding: 1px 1em
 	.heading
 		text-align: center
 		font-size: 24px
 		margin-top: 0
 		margin-bottom: 15px
+	.head-small
+		font-size: 20px
+
+.big-list
+	font-size: 12px
 
 #other-data
 	.text-about-me
@@ -461,7 +517,136 @@ b, strong
 	form.hide
 		display: none
 
+.row.navbar.first
+	padding-bottom: 0
+	border-bottom: none
+
+.list form
+	width: 100%
+	margin: 0
+	padding: 0
+	height: 100%
+
+.border-right
+	border-right: 1px solid #fff
+
+#gem-layout, #dwarf-layout, #elf-layout, #gem-type-layout
+	display: none
+
+.row.gem
+	position: relative
+	font-size: 16px
+	border: none
+	margin: 10px 0
+	background-color: #8789bd
+	border-radius: 10px
+	padding: 10px 20px
+	span
+		display: inline-block
+		min-width: 20%
+		word-break: break-all
+	.left
+		min-width: 82px
+	.center
+		min-width: 171px
+	.right
+		min-width: 64px
+	.row
+		width: 100%
+		padding: 5px 0
+
+.delete
+	position: absolute
+	right: 11px
+	top: 10px
+	color: #a73838
+	cursor: pointer
+
+.confirmation
+	position: absolute
+	display: none
+	background-color: white
+	width: 20%
+	min-width: 180px
+	padding: 5px 10px 10px 10px
+	border-radius: 8px
+	right: 3px
+	top: 28px
+	z-index: 10
+	.yes, .no
+		display: inline-block
+		text-align: center
+		width: 45%
+		cursor: pointer
+	.yes
+		color: green
+		float: left
+	.no
+		color: red
+		float: right
+	
+
+.square
+	border-radius: .4vw
+
+
+.dwarfs, .elves
+	text-align: center
+	font-size: 14px
+
+.dwarfs
+	border-right: 2px dotted #a4a6d1
+
+.row.user
+	position: relative
+	a
+		border-bottom: 1px dashed #1a1a1a
+		color: inherit
+	a:hover
+		color: grey
+	.deleted
+		text-decoration: line-through
+		border-bottom: 0
 
 
 
+.dwarf
+	margin-right: 10px
+	.col-6
+		text-align: left
+
+.elf
+	margin-left: 10px
+	text-align: left
+	.has
+		text-align: center
+
+.amount
+	width: 60px
+	margin-right: .5em
+
+.gem-type
+	margin-bottom: 20px
+	.new-name
+		width: 10em
+		margin-right: 0.5em
+		//display: none
+
+.settings
+	.gem-type
+		.delete
+			position: relative
+			bottom: 10px
+			left: 7px
+			top: auto
+		.confirmation
+			right: 30px
+			top: 20px
+		
+
+#gems-types
+	border-bottom: none
+	.conf
+		//display: none
+	
 @import "media" // Always at the end

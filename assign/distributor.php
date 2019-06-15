@@ -3,16 +3,21 @@ require_once '../config/database.php';
 require_once '../func/common.php';
 
 session_start();
+
+// if(!isset($_POST['assignment'])) {
+//   die;
+// };
+
 //goToLoginPage();
+try {
+  $stash = getStash();
+  $assignmentCoeffs = getAssignmentCoeffs();
+  $assignment = makeAssignment($stash, $assignmentCoeffs);
+  //throw new Exception('Упс, не удалось произвести распределение, попробуйте позже!');
+  echo json_encode($assignment);
+} catch (Exception $e) {
+  echo json_encode(array("error" => $e->getMessage()));
+}
 
-$unassignedGems = getUnassignedGems();
-$assignCoeffs = getAssignCoeffs();
-$elvesCoeffs = makeElvesCoeffs();
-$condition = getCondition();
-$initialState = $condition;
-
-$elvesCoeffs = assignEqually($assignCoeffs['equally'], $elvesCoeffs, $condition);
-$elvesCoeffs = assignAtLeastOne($assignCoeffs['least_one'], $elvesCoeffs, $condition, $initialState);
-$elvesCoeffs = assignPreferred($assignCoeffs['preferred'], $elvesCoeffs, $condition, 3);
-var_export($elvesCoeffs);
+return;
 ?>
