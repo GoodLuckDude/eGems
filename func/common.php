@@ -1,5 +1,5 @@
 <?php
-//require_once "../config/database.php";
+// require_once "../config/database.php";
 
 //it's func for for general use
 function checkAuthorization() {
@@ -61,10 +61,10 @@ function getDataOfUser($id) {
 }
 
 function getDwarfGems($dwarfId) {
-  $gems = DB::run(" SELECT type, count(gem_type_id)
+  $gems = DB::run("SELECT type, count(gem_type_id)
       FROM gems_types INNER JOIN gems
       ON gems_types.id = gems.gem_type_id
-      WHERE gems.dwarf_id = ? AND gems_types.deleted = false
+      WHERE gems.dwarf_id = ? AND gems.deleted = false
       GROUP BY gems_types.type
       ORDER BY count DESC",
     [$dwarfId]

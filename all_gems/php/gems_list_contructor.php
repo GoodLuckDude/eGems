@@ -39,7 +39,7 @@ try{
   $sql = "SELECT
       gems.id, gems_types.type, dwarf.email as dwarf, master.email as master,
       elf.email as elf, gems.status,
-      (case when gems.by_hand IS TRUE then 'вручную' else 'алгоритм' end) as method,
+      (case when gems.by_hand = TRUE THEN 'вручную' when gems.by_hand = FALSE THEN 'алгоритм' ELSE '' end) as method,
       to_char(gems.extraction_date, 'DD.MM.YYYY') as extraction_date,
       to_char(gems.assignment_date, 'DD.MM.YYYY') as assignment_date,
       to_char(gems.confirmation_date, 'DD.MM.YYYY') as confirmation_date

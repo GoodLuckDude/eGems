@@ -1,4 +1,5 @@
 <?php
+
 //check email and pass in db and return user's name, race, master 
 function getUser($email, $password) {
 	$user = DB::run("SELECT id, name, race, master, password FROM users WHERE email = ?",
@@ -55,9 +56,8 @@ function redirect($user) {			//FIXME зарефакторить, раздели�
 	}
 	//успешно вошли
 	$_SESSION['loggedUser'] = $user;
-	$curDate = date("d.m.Y");
-	DB::run("UPDATE users SET authorization_date = ? WHERE id = ?",
-		[$curDate, $_SESSION['loggedUser']['id']]
+	DB::run("UPDATE users SET authorization_date = current_date WHERE id = ?",
+		[$_SESSION['loggedUser']['id']]
 	);
 	goToNeededPage($user);
 
@@ -66,16 +66,17 @@ function redirect($user) {			//FIXME зарефакторить, раздели�
 
 /////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////
-?>
 
 
-
-
-<?php
+session_start();
 require_once '../config/database.php';
 require_once '../func/common.php';
 
-session_start();
+
+
+
+$_POST['email'] = 'admin@admin.ru';
+$_POST['password'] = 'admin';
 
 $email = clean($_POST['email']);
 $password = clean($_POST['password']);
