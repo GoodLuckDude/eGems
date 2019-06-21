@@ -32,6 +32,12 @@ class DB
 			return call_user_func_array(array(self::instance(), $method), $args);
 	}
 
+	public static function prep($sql) {
+		$stmt = self::instance()->prepare($sql);
+		return $stmt;
+	}
+
+
 	public static function run($sql, $args = []) {
 		if (!$args) {
 			return self::instance()->query($sql);

@@ -1,39 +1,54 @@
 (function () {
 
-  function showDwarf(dwarfData) {
-    if ( !typeof dwarfData === 'object' ) {
-      throw new Error('Gem to show incorrect')
+  function showUser(user) {
+    if ( !typeof user === 'object') {
+      throw new Error('Incorrect type of user')
     }
-    //Копируем готовый макет с страницы
-    let $dwarf = $('#dwarf-layout').clone().attr('id', dwarfData['id']);
-    if (dwarfData['status'] == 'deleted') $dwarf.find('.name').addClass('deleted');
-    $dwarf.find('.name').attr('href', '/profile/profile.php?id='+dwarfData['id']);
-    if (dwarfData['master'] == true) $('<i>', {class: 'fa fa-wrench'}).appendTo($dwarf.find('.master'));
-    //Заполняем его
-    for (field in dwarfData) {
+
+    let $layout = {};
+
+    if (user.race === 'dwarf') {
+      $layout = $('#dwarf-layout').clone();
+      if (user.master == true) $('<i>', {'class': 'fa fa-wrench', 'title': "Этот гном является мастером"}).appendTo($layout.find('.master'));
+
+    } else {
+      $layout = $('#elf-layout').clone();
+      $layout.find('.favorites').text(user.favorites.join(', ') || '-');
+    }
+
+    //Копируем готовый макет со страницы и заполняем его
+    $layout.attr('id', user.id);
+    if (user.status == 'deleted') {
+      $layout.find('.name').addClass('deleted');
+      $layout.find('.delete').toggle();
+    }
+    $layout.find('.name').attr('href', '/profile/profile.php?id='+user.id);
+    for (field in user) {
       if(field == 'name' || field == 'gems_count') {
-        $dwarf.find('.'+field).text(dwarfData[field] || '-');
-      // } else if (field == 'master' && dwarfData[field] == true) {
-      //   $('<i>', {class: 'fa fa-wrench'}).appendTo($dwarf.find('.master'));
-      // } else if (field == 'status') {
-      //   if(dwarfData['status'] == 'deleted') $dwarf.find('.name').addClass('deleted');
+        $layout.find('.'+field).text(user[field] || '-');
       }
     }
-    $('.user.dwarf').first().before($dwarf);
+
+    $('.user.'+user.race).first().before($layout);
     return;
   }; 
 
 
-  function deleteUser(gemId) {
-    let data = {'gemId': gemId};
+  function deleteUser(userId) {
+    let data = {'userId': userId};
     $.ajax({
-      type: 'GET',
-      url: './php/delete_gem.php',
+      type: 'POST',
+      url: '../modules/delete_user.php',
       data: data,
       dataType: "JSON",
-      success: (msg) => {
-        $('#'+gemId).find('.msg').text(msg);
-        $('#'+gemId).find('.delete').toggle();
+      success: (response) => {
+        if (response.code === 'success') {
+          $('#'+userId).find('.delete').toggle();
+          $('#'+userId).find('.name').addClass('deleted');
+        } else if (response.code === 'error'){
+          // listError();
+          alert('asd');
+        }
       },
     });
   };
@@ -42,64 +57,108 @@
     $confirmation.toggle();
   }
 
-  function showDwarfs(dwarfs) {
-    if (dwarfs.length == 0) {
-      $msg = $('<div>', {
-        "class": "row msg neutral-msg",
-        text: 'Упс! Никто не найден.'
-        }
-      );
-      $('#dwarf-layout').after($msg);
+  function showUsers(users) {
+    if (users.length == 0) {
+      return false;
     } else {
-      $.each(dwarfs, (key, dwarf) => {
-        showDwarf(dwarf);
+
+      $.each(users, (key, user) => {
+        showUser(user);
       });
+
       $('.delete').on('click', (e) => {
-        let el = e.currentTarget;
+        $('.confirmation').hide();
+        let el = e.target;
         toggleConfirmation($(el).siblings('.confirmation'));
       });
 
       $('.yes').on('click', (e) => {
-        let el = e.currentTarget;
-        let gemId = $(el).parents('.gem').attr("id");
-        deleteGem(gemId);
+        let el = e.target;
+        let userId = $(el).parents('.user').attr("id");
+        deleteUser(userId);
         toggleConfirmation($(el).parent('.confirmation'));
       });
 
       $('.no').on('click', (e) => {
-        let el = e.currentTarget;
+        let el = e.target;
         toggleConfirmation($(el).parent('.confirmation'));
       })
     }
   };
 
-  $(document).ready(() => {
+  function makeLists() {
     let filters = $('#filters').serialize();
     $.ajax({
       type: 'GET',
-      url: './php/dwarfs_list_contructor.php',
+      url: './php/users_lists_contructor.php',
       data: filters,
       dataType: "JSON",
-      success: (dwarfs) => {
-        showDwarfs(dwarfs)
+      success: (response) => {
+        if (response.code === 'success') {
+          showUsers(response.users);
+        } else {
+          // listError();
+          alert('asd');
+        }
+
       },
       error:  function(xhr, str){
         //alert('Возникла ошибка: ' + xhr.responseCode);
       }
     });
+  };
+
+
+  function refreshLists() {
+    $('.user:not(#dwarf-layout, #elf-layout), .neutral-msg').remove();
+    makeLists();
+  };
+
+  $(document).ready(() => {
+    makeLists();
   });
 
-  $('#submit').on('click', () => {
-    $('.gem:not(#gem-layout)').remove();
-    $('.msg').remove();
-    filters = $('#filters').serialize();
+  $('#filters').find('.input').keyup(function (e) {
+    if( e.keyCode == 16 || e.keyCode == 18 || e.keyCode == 17 ) return true; // не искать если shift, ctr, alt
+    refreshLists();
+    });
+
+  $('#filters').find('.checkbox').on('input', () => {
+    refreshLists();
+  });
+
+  $('#add-user').on('click', (e) => {
+    $('#create-user-form').stop().slideToggle();
+  });
+
+  $(document).delegate("#create-user-form","submit",function(){
+    return false;
+  });
+
+  $('#create-user-submit').on('click', (e) => {
+    let valid = true;
+    $('#create-user-form').find('.input').each((ind, element) => {
+      if (element.value == 0) valid = false;
+    });
+    if ($('#race-dwarf').prop('checked') == $('#race-elf').prop('checked')) valid = false;
+    if (valid == false) return;
+    $('#create-user-form').stop().slideToggle();
+    $data = $('#create-user-form').serialize();
     $.ajax({
-      type: 'GET',
-      url: './php/gems_list_contructor.php',
-      data: filters,
+      type: 'POST',
+      url: '../authorization/authorization.php',
+      data: $data,
       dataType: "JSON",
-      success: (gems) => {
-        showGems(gems)
+      success: (response) => {
+        if (response.code === 'success') {
+          $('#create-user-submit').find('input').val("");
+          $('#create-user-msg').text(response.msg);
+          refreshLists();
+        } else {
+          // listError();
+          alert('asd');
+        }
+
       },
       error:  function(xhr, str){
         alert('Возникла ошибка: ' + xhr.responseCode);
@@ -107,5 +166,10 @@
     });
   });
 
+  $(document).click(function(event) {
+    if ( $(event.target).closest(".confirmation, .delete").length ) return;
+    $(".confirmation").hide();
+    event.stopPropagation();
+  });
 
 })();

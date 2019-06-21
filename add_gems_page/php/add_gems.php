@@ -3,6 +3,12 @@ try{
   require_once "../../config/database.php";
   require_once "../../func/common.php";
 
+  session_start();
+
+  if ($_SESSION['loggedUser']['race'] != 'dwarf') {
+    redirToProfile();
+  }
+
   if( !$_SERVER['REQUEST_METHOD'] === 'POST' ) {
     die;
   };

@@ -1,7 +1,7 @@
 <?php
-// require_once "../config/database.php";
 
-//it's func for for general use
+//it's funcs for for general use
+
 function checkAuthorization() {
   if ( !isset($_SESSION['loggedUser']) ) {
     return false;
@@ -9,9 +9,15 @@ function checkAuthorization() {
   return true;
 }
 
+function redirToProfile() {
+  $id = $_SESSION['loggedUser']['id'];
+  header("Location: http://localhost/profile/profile.php?id=$id");
+	die();
+}
+
 //save url's this page in'$_SESSION['neededPage']' for redirect after login
 function rememberThisPage() {
-  $_SESSION['neededPage'] = $_SERVER['SCRIPT_NAME']; //NOTE почему не работает php_self???
+  $_SESSION['neededPage'] = $_SERVER['REQUEST_URI']; //NOTE почему не работает php_self???
 };
 
 //redirect to login page
@@ -25,6 +31,11 @@ function redirIfGuest() {
     rememberThisPage();
     goToLoginPage();
   }
+}
+
+function preparation() {
+  session_start();
+  redirIfGuest();
 }
 
 function checkOwner($id) {
@@ -52,7 +63,7 @@ function getDataOfUser($id) {
   $dataOfUser = DB::run("SELECT
         id, email, name, race, master, to_char(registration_date, 'DD.MM.YYYY') as registration_date,
         to_char(authorization_date, 'DD.MM.YYYY') as authorization_date, status,
-        (deletion_date, 'DD.MM.YYYY') as deletion_date
+        to_char(deletion_date, 'DD.MM.YYYY') as deletion_date
       FROM users
       WHERE id = ?",
     [$id]
@@ -60,15 +71,23 @@ function getDataOfUser($id) {
   return $dataOfUser;
 }
 
-function getDwarfGems($dwarfId) {
-  $gems = DB::run("SELECT type, count(gem_type_id)
-      FROM gems_types INNER JOIN gems
-      ON gems_types.id = gems.gem_type_id
-      WHERE gems.dwarf_id = ? AND gems.deleted = false
-      GROUP BY gems_types.type
-      ORDER BY count DESC",
-    [$dwarfId]
+function getAllGems($userId, $race, $status) {
+  $column = "dwarf_id";
+  $byStatus = "";
+  if ($race === 'elf') {
+    $column = 'elf_id';
+    $byStatus = " AND gems.status = '$status'";
+  };
+
+  $gems = DB::run("SELECT gems_types.id, type, count(gem_type_id)
+    FROM gems_types INNER JOIN gems
+    ON gems_types.id = gems.gem_type_id
+    WHERE gems.$column = ? AND gems.deleted = false $byStatus
+    GROUP BY gems_types.id, gems_types.type
+    ORDER BY count DESC",
+    [$userId]
   )->fetchAll();
+
   return $gems;
 }
 
@@ -78,7 +97,7 @@ function getStash() {
       FROM gems_types
       INNER JOIN gems ON gems_types.id = gems.gem_type_id
       INNER JOIN users ON users.id = gems.dwarf_id
-      WHERE gems.status = 'не назначена'"
+      WHERE gems.status = 'не назначена' AND gems.deleted = false"
   )->fetchAll();
   return $stash;
 }
@@ -222,5 +241,17 @@ function makeAssignment($stash, $assignmentCoeffs) {
 
   return $assignment;
 }
+
+function getElfWishes($elf_id) {
+
+  $wishes = DB::run("SELECT id, type, wish
+    FROM gems_types
+    INNER JOIN wishes ON id = gem_type_id
+    WHERE elf_id = ? AND gems_types.deleted = false",
+    [$elf_id]
+  )->fetchAll();
+
+  return $wishes;
+};
 
 ?>

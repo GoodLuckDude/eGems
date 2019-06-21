@@ -4,11 +4,15 @@ require_once '../func/common.php';
 
 session_start();
 
+if ( !checkMaster() ) {
+  redirToProfile();
+}
+
 // if(!isset($_POST['assignment'])) {
 //   die;
 // };
 
-//goToLoginPage();
+
 try {
   $stash = getStash();
   $assignmentCoeffs = getAssignmentCoeffs();

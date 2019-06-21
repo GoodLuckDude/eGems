@@ -1,17 +1,23 @@
 <?php
-//require_once '../../config/database.php';
-//require_once '../../func/common.php';
+// require_once '../../config/database.php';
+// require_once '../../func/common.php';
 
 session_start();
 //goToLoginPage();
-$_GET['id'] = 1;
+
 $dataOfUser = getDataOfUser($_GET['id']);
+$unconfirmedGems = getAllGems($dataOfUser['id'], $dataOfUser['race'], 'назначена'); //Русский язык! А-та-та
 
 
 if ($dataOfUser['race'] == 'dwarf') {
   $profileImgRef = '../img/dwarf.png';
+  $gemsMessage = 'Добыл';
+  $race = 'гном';
 } else {
   $profileImgRef = '../img/elf.png';
+  $gemsMessage = 'Получил';
+  $elfWishes = getElfWishes($dataOfUser['id']);
+  $race = 'эльф';
 }
 
 if ($dataOfUser['deletion_date'] == "(,DD.MM.YYYY)") {
@@ -28,7 +34,13 @@ function checkboxDisabler() {
   }
 }
 
-$gems = getDwarfGems($_GET['id']);
+function showElfWishes($elfWishes) {
+  
+};
+
+$gemsStatus = "";
+if ($dataOfUser['race'] === 'elf') $gemsStatus = "подтверждена";
+$gems = getAllGems($dataOfUser['id'], $dataOfUser['race'], $gemsStatus);
 
 function showGems($gems) {
   foreach ($gems as $key => $gem):

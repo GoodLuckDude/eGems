@@ -56,13 +56,8 @@
           assign[$(this).parent().attr('id')] = {"elfId": $(this).val(), "by_hand": true};
         }
       })
-      // let heights = [];
-      // $("div").each(function(indx){
-      //   heights.push($(this).height());
-      // });
     }
-    
-    
+
     $.ajax({
       type: "POST",
       url: "./confirm.php",

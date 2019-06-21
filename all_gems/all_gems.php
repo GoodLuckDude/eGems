@@ -2,9 +2,7 @@
 require_once '../config/database.php';
 require_once '../func/common.php';
 
-
-session_start();
-//redirIfGuest();   //в отдельную функцию
+preparation();
 
 include_once "../_parts/header.php";
 ?>

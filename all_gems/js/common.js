@@ -23,8 +23,7 @@
       data: data,
       dataType: "JSON",
       success: (msg) => {
-        $('#'+gemId).find('.msg').text(msg);
-        $('#'+gemId).find('.delete').toggle();
+        $('#'+gemId).slideToggle();
       },
     });
   };
@@ -47,6 +46,7 @@
       });
 
       $('.delete').on('click', (e) => {
+        $('.confirmation').hide();
         let el = e.currentTarget;
         toggleConfirmation($(el).siblings('.confirmation'));
       });
@@ -97,6 +97,12 @@
         alert('Возникла ошибка: ' + xhr.responseCode);
       }
     });
+  });
+
+  $(document).click(function(event) {
+    if ( $(event.target).closest(".confirmation, .delete").length ) return;
+    $(".confirmation").hide();
+    event.stopPropagation();
   });
 
 

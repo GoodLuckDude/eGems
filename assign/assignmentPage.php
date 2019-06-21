@@ -2,9 +2,11 @@
 require_once '../config/database.php';
 require_once '../func/common.php';
 
+preparation();
 
-session_start();
-//redirIfGuest();   //в отдельную функцию
+if ($_SESSION['loggedUser']['master'] != true) {
+  redirToProfile();
+}
 
 $stash = getStash();
 include_once "../_parts/header.php";

@@ -4,6 +4,10 @@ require_once '../func/common.php';
 
 session_start();
 
+if ($_SESSION['loggedUser']['master'] != true) {
+  redirToProfile();
+}
+
 try {
   if( !isset($_POST["assign"]) || empty($_POST['assign'])) {
     return;

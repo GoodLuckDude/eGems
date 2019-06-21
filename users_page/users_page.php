@@ -2,9 +2,7 @@
 require_once '../config/database.php';
 require_once '../func/common.php';
 
-
-session_start();
-//redirIfGuest();   //в отдельную функцию
+preparation();
 
 include_once "../_parts/header.php";
 ?>
@@ -22,25 +20,52 @@ include_once "../_parts/header.php";
 
 
 
-    <form id='filters' class="none-border">
+    <form id='filters' class="">
       <div class="row navbar justify-content-start">
         <div class="col col-3"><span>Имя пользователя:</span><input type="text" name="name"
           class="input" placeholder="User's name">
         </div>
 
         <div class="col col-3">Статус:<br>
-        <label for="active">Активен</label>
-        <input id="active" type="checkbox" name="status[]" class="checkbox" value="active" checked>
-        <label for="deleted">Удалён</label>
-        <input id="deleted" type="checkbox" name="status[]" class="checkbox" value="deleted">
+          <label for="active">Активен</label>
+          <input id="active" type="checkbox" name="status[]" class="checkbox" value="active" checked>
+          <label for="deleted">Удалён</label>
+          <input id="deleted" type="checkbox" name="status[]" class="checkbox" value="deleted" checked>
         </div>
+
+        <?php if ($_SESSION['loggedUser']['master'] == true) :?>
+        <div id="create-user-msg" class="col-auto ml-auto msg"></div>
+        <div id="add-user" class="col-auto"><button type="button" class="button">Добавить пользователя</button></div>
 
       </div>
     </form>
 
+    <form id='create-user-form' action="">
+      <div class="row create-user">
+        <div class="col-12 head-small text-center">Введите данные нового пользователя:</div>
+        <div class="col-3"><label for="email">Еmail:</label><br><input type="email" name="email" id="email" class="input" placeholder="Enter email" required></div>
+        <div class="col-3"><label for="password">Пароль:</label><br><input type="password" name="password" id="password" class="input" placeholder="Enter password" required></div>
+        <div class="col-3"><label for="name">Имя:</label><br><input type="text" name="name" id="name" class="input" placeholder="Enter name" required></div>
+        <div class="col-3"><label for="name">Раса:</label><br>
+          <label class="race" for="race-dwarf">Гном</label><input type="radio" name="race" id="race-dwarf" class="radio" value="dwarf" required>
+          <label class="race" for="race-elf">Эльф</label><input type="radio" name="race" id="race-elf" class="radio" value="elf" required>
+        </div>
+        <div class="col-3 ml-auto submit"><button id="create-user-submit" type="submit" class="button">Подтвердить</button></div>
+        <input type="hidden" name="ajax" value='true'>
+      </div>
+    </form>
+        <?php else:?>
 
-    <div class="row">
-      <div class="col-6 dwarfs">
+        </div>
+
+        <?php endif?>
+
+
+
+
+
+    <div class="row none-border">
+      <div class="col-6 dwarfs border-r">
         <span class="heading head-small">Гномы</span>
 
         <div class="row dwarf">
@@ -76,10 +101,10 @@ include_once "../_parts/header.php";
           <div class="col-4">Любимые</div>
         </div>
 
-        <div id="" class="row user elf">
-          <div class="col-5 align-self-center"><a href="/profile/profile.php?">Машуля Свинюля</a></div>
-          <div class="col-3 align-self-center has">100</div>
-          <div class="col-4 align-self-center">Топаз<br>Алмаз<br>Корунд</div>
+        <div id="elf-layout" class="row user elf">
+          <div class="col-5 align-self-center"><a href="/profile/profile.php?" class="name"></a></div>
+          <div class="col-3 align-self-center text-center gems_count"></div>
+          <div class="col-4 align-self-center favorites"></div>
 
           <?php if ($_SESSION['loggedUser']['master'] == true) :?>
           <i class="fa fa-times delete"></i>
@@ -94,9 +119,6 @@ include_once "../_parts/header.php";
 
       </div>
     </div>
-
-
-    
 
     <div id="msg" class="row msg neutral-msg"></div>
   </div>
