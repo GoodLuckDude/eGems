@@ -74,10 +74,6 @@ require_once '../func/common.php';
 
 
 
-
-$_POST['email'] = 'admin@admin.ru';
-$_POST['password'] = 'admin';
-
 $email = clean($_POST['email']);
 $password = clean($_POST['password']);
 
