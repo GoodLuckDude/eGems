@@ -20,6 +20,16 @@ include_once "../_parts/header.php";
     <div class="row">
       <div class="col heading">Распределение драгоценностей</div>
     </div>
+    <form action="" method='POST'>
+    <div class="row">
+      <div class="col-auto">
+          <button id="assign" class="button button-purple square" type="button">Распределить драгоценности</button>
+      </div>
+
+      <div class="col-auto ml-auto">
+          <button id="submit" class="button button-submit" type="button">Подтвердить распределение</button>
+      </div>
+    </div>
 
     <div class="row">
       <div class="col col-3">Тип драгоценности</div>
@@ -28,33 +38,24 @@ include_once "../_parts/header.php";
       <div class="col col-3">Эльф</div>
     </div>
 
-    <form action="" method='POST'>
     <?php foreach ($stash as $key => $gem):?>
-      <div class="row">
+      <div class="row gem-to-assign">
     <?php foreach ($gem as $field => $value):
     if ($field != 'id' && $field != 'gem_type_id'):?>
         <div class="col col-3"><?php echo $value ?></div>
     <?php endif; endforeach;?>
-      <div id='<?php echo $gem['id']?>' class="col col-3 ">
-        <input class="input email" type="text" value=''>
+      <div id='<?php echo $gem['id']?>' class="col col-3 gener">
+        <div class="err-msg"></div>
+        <input class="input name" type="name" value=''>
         <input class="input id" type="hidden" name="gem_id" value='<?php echo $gem['id'] ?>'>
         <input class="input by_hand" type="hidden" name="by_hand" value=''>
+        <input class="input elfId" type="hidden" name="by_hand" value=''>
       </div>
 
       </div>
     <?php
     endforeach;
     ?>
-
-      <div class="row">
-        <div class="col-auto">
-            <button id="assign" class="button button-purple square" type="button">Распределить драгоценности</button>
-        </div>
-
-        <div class="col-auto ml-auto">
-            <button id="submit" class="button button-submit" type="button">Подтвердить распределение</button>
-        </div>
-      </div>
 
     </form>
   </div>

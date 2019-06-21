@@ -35,9 +35,8 @@
 
 					<div class="col-3">
 						<div class="img">
-							<img class="img" src="img/dwarfSmall.png" width="100%" height="100%" alt="Гном">
+							<img id="avatar" class="img" src="./img/dwarf.png" width="100%" height="100%" alt="Гном">
 						</div>
-						<button id="downloadImg" class="button" type="button">Загрузить</button>
 					</div>
 
 				</div>

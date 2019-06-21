@@ -5,10 +5,10 @@
         <i class="fa fa-mobile"></i>+7 (919) 781-95-69
       </div>
       <div class="col-lg-3 col-sm-5">
-        Бла-бла-бла
+        Средеземье
       </div>
       <div class="col-lg-3 col-sm-5">
-        Ля-ля-ля
+        Ежедневно с 8:00 до 22:00
       </div>
     </div>
   </div>

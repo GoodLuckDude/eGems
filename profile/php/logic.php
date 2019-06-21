@@ -7,7 +7,7 @@ session_start();
 
 $dataOfUser = getDataOfUser($_GET['id']);
 $unconfirmedGems = getAllGems($dataOfUser['id'], $dataOfUser['race'], 'назначена'); //Русский язык! А-та-та
-
+$aboutMe = DB::run("SELECT description FROM users WHERE id = ?", [$_GET['id']])->fetch();
 
 if ($dataOfUser['race'] == 'dwarf') {
   $profileImgRef = '../img/dwarf.png';

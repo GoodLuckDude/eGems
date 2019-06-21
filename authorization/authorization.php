@@ -14,10 +14,10 @@ function getUser($email, $password) {
 }
 
 //registration of user
-function registration($email, $password, $name, $race) {						//FIXME добавить в бд столбец aboutMe и подправить эту функцию, пароль захешировать и изменить getUsers!!!!
+function registration($email, $password, $name, $race, $aboutMe) {						//FIXME добавить в бд столбец aboutMe и подправить эту функцию, пароль захешировать и изменить getUsers!!!!
 	$hash = password_hash($password, PASSWORD_DEFAULT);
-	DB::run("INSERT INTO users (email, password, name, race) VALUES (?, ?, ?, ?)",
-		[$email, $hash, $name, $race]
+	DB::run("INSERT INTO users (email, password, name, race, description) VALUES (?, ?, ?, ?, ?)",
+		[$email, $hash, $name, $race, $aboutMe]
 	);
 	if ($race == "elf") {
 		$gems_types = DB::run("SELECT id FROM gems_types")->fetchAll();
@@ -96,8 +96,8 @@ $password = clean($_POST['password']);
 if(isset($_POST['name'])) {								//если передали name, то сначала регистрация пользователя
 	$name = clean($_POST['name']);					//FIXME сделать проверку совпадения паролей, вывод ошибок
 	$race = $_POST['race'];
-	//$aboutMe = clean($_POST['aboutMe']);
-	registration($email, $password, $name, $race);	//NOTE как и когда лучше назначать мастера?
+	$aboutMe = clean($_POST['aboutMe']);
+	registration($email, $password, $name, $race, $aboutMe);	//NOTE как и когда лучше назначать мастера?
 	if(isset($_POST['ajax'])) {
 		$response = array("code" => "success", 'msg' => 'Пользователь создан!');
 		echo json_encode($response);

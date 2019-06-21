@@ -4,11 +4,14 @@
   session_start();
 
 try {
+
+  if ( !checkOwner($_POST['userId']) ) {
+    throw new Exception ('Permission denied!');
+  }
+
   if ( empty($_POST) ) {
     throw new Exception ('Wishes is empty!');
   }
-
-  if ($_SESS)
 
   $wishes = $_POST;
   $availableTypes = array();

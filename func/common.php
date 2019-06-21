@@ -202,7 +202,12 @@ function assignAtLeastOne($assignmentCoeff, $elvesCoeffs, $condition, $assignmen
 
 function assignPreferred($assignmentCoeff, $elvesCoeffs, $wishes, $gemId) {
   $uniq = count(array_unique($wishes));
-  $step = 1/($uniq - 1);
+  if ($uniq = 1) {
+    $step = 0;
+  } else {
+    $step = 1/($uniq - 1);
+  }
+
   $currentStep = -1;
   $minWish = -INF;
 

@@ -4,9 +4,9 @@ require_once '../func/common.php';
 
 session_start();
 
-if ( !checkMaster() ) {
-  redirToProfile();
-}
+// if ( !checkMaster() ) {
+//   redirToProfile();
+// }
 
 // if(!isset($_POST['assignment'])) {
 //   die;

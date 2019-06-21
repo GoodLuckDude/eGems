@@ -100,7 +100,7 @@ include_once "../_parts/header.php";
   <?php if ($_SESSION['loggedUser']['id'] == $dataOfUser['id']):?>
       <div id="notice" class="confirmation">Сумма ваших предпочтений не равна 100%<br>Вы хотите распределить остаток автоматически?<br><div class="yes">Да</div><div class="no">Нет</div></div>
       <div class="col-2 align-self-end"><button id="change-wishes" class="button button-purple show" type="button">Изменить</button></div>
-      <div class="col-2 align-self-end"><button id="send-wishes" type="button" class="button to-show">Применить</button></div>
+      <div class="col-2 align-self-end"><button id="nullify" type="button" class="button button-purple to-show">Обнулить</button></div>
       <div class="col-4 text-center heading">Предпочтения</div>
       <div class="col-4 text-right align-self-end"><span id="success-wishes" class="neutral-msg"></span><span class="to-show">Доступно: <span id="to-avail">0</span>%</span></div>
   <?php else: ?>
@@ -122,9 +122,10 @@ include_once "../_parts/header.php";
   <?php endforeach; ?>
 
   <?php if ($_GET['id'] == $_SESSION['loggedUser']['id']): ?>
-    <div class="col-2 ml-auto align-self-end to-show"><button id="nullify" type="button" class="button button-purple">Обнулить</button></div><div class="col-1"></div>
+    <div class="col-2 ml-auto align-self-end to-show"><button id="send-wishes" type="button" class="button">Применить</button></div><div class="col-1"></div>
   <?php endif;?>
     <input id="available" type="hidden" name="" value=0>
+    <input type="hidden" name="userId" value="<?php echo $_GET['id'] ?>">
     </form>
   <?php endif;?>
   </div>
@@ -180,7 +181,7 @@ include_once "../_parts/header.php";
 
     <div class="row">
       <div class="row small-row">
-        <div class="col col-12 value text-about-me"><label for="change-about-me-button" class="lable">Я Рикардо Ромити пищу....свищу<br><br><br></label></div>
+        <div class="col col-12 value text-about-me"><label for="change-about-me-button" class="lable"><?php echo $aboutMe['description'] ?><br><br><br></label></div>
         <?php if ( checkDataChangeAccess($dataOfUser['id']) ): ?>
         <div class="col col-2 ml-auto"><button id="change-about-me-button" class="button button-purple" type="button">Изменить</button></div>
         <?php endif; ?>

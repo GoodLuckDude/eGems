@@ -11,9 +11,9 @@ try {
   };
 
   // echo json_encode($_POST);
-  // return;
+  // return; $_POST['userId']
 
-  if ($_POST['userId'] != $_SESSION['loggedUser']['id']) {
+  if ( !checkDataChangeAccess($_POST['userId'])) {
     throw new Exception ('У вас не достаточно прав!');
   };
 

@@ -177,6 +177,14 @@ div.content
 	font-size: .8vw
 	margin-left: 10%
 
+.gem-to-assign
+	.gener
+		position: relative
+	.err-msg
+		position: absolute
+		top: -20px
+		font-size: 14px
+		left: 25px
 		
 .logIn-panel
 	margin: auto
@@ -560,12 +568,19 @@ div.content
 		display: block
 
 .carousel-gems
+	position: relative
 	padding-left: 100px
 	padding-right: 100px
 	.owl-nav
-		font-size: 24px
+		font-size: 60px
 		button
-			margin: 0 20px
+			position: absolute
+		.owl-next
+			right: 5%
+			top: 26%
+		.owl-prev
+			left: 5%
+			top: 26%
 	.owl-dots
 		height: 0
 .carousel-gems-item
@@ -883,5 +898,10 @@ div.content
 
 #send-wishes
 		border-radius: 20px
+
+
+.owl-nav
+	button:focus, i:focus
+		outline: none
 
 @import "media" // Always at the end
